@@ -1,11 +1,14 @@
 // imports express module
 // declares a variable that encapsulates Express's functionality to configure your web server
 const express = require('express'),
-    morgan=require('morgan');
+    morgan = require('morgan'),
+    bodyParser = require('body-parser'),
+    uuid = require('uuid');
 
 const app = express();
 
 app.use(morgan('common'));
+app.use(bodyParser.json());
 
 let myLogger = (req, res, next) => {
     console.log(req.url);
