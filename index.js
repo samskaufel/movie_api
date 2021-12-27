@@ -55,6 +55,13 @@ let movies = [
     }
 ];
 
+let genres = [
+    {
+        category: 'musical',
+        description: 'Musical film is a film genre in which songs by the characters are interwoven into the narrative, sometimes accompanied by singing and dancing. The songs usually advance the plot or develop the film\'s characters, but in some cases, they serve merely as breaks in the storyline, often as elaborate production numbers.'
+    }
+]
+
 let directors = [
     {
         name: 'Robert Wise',
