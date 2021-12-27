@@ -1,8 +1,7 @@
-// Requires express, morgan, body-parser, method-override, and uuid
+// Requires express, morgan, body-parser, and uuid
 const express = require('express'),
     morgan = require('morgan'),
     bodyParser = require('body-parser'),
-    methodOverride = require('method-override'),
     uuid = require('uuid');
 
 const app = express();
@@ -13,7 +12,6 @@ app.use(bodyParser.urlencoded({
 
 app.use(morgan('common'));
 app.use(bodyParser.json());
-app.use(methodOverride());
 
 let myLogger = (req, res, next) => {
     console.log(req.url);
