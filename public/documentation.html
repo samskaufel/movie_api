@@ -57,14 +57,14 @@
             </td>
         </tr>
         <tr>
-            <td>Return data about a genre (description) by name/title (e.g., "Thriller")</td>
-            <td>/movies/:title/:genre</td>
+            <td>Return data about a genre (description) by category (e.g., "Thriller")</td>
+            <td>/genres/:category</td>
             <td>GET</td>
             <td>A JSON object holding data about a genre</td>
         </tr>
         <tr>
             <td>Return data about a director (bio, birth year, death year) by name</td>
-            <td>/movies/:director/:directorName</td>
+            <td>/director/:name</td>
             <td>GET</td>
             <td>A JSON object holding data about a director, containing name, birth year, death year, and a bio. Example: <br>
                 { <br>
@@ -77,7 +77,7 @@
         </tr>
         <tr>
             <td>Allow new users to register</td>
-            <td>/users/:newUser</td>
+            <td>/users</td>
             <td>POST</td>
             <td>A JSON object holding data about the user that was added, including username and email. Example: <br>
                 { <br>

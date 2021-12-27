@@ -1,14 +1,19 @@
-// imports express module
-// declares a variable that encapsulates Express's functionality to configure your web server
+// Requires express, morgan, body-parser, method-override, and uuid
 const express = require('express'),
     morgan = require('morgan'),
     bodyParser = require('body-parser'),
+    methodOverride = require('method-override'),
     uuid = require('uuid');
 
 const app = express();
 
+app.use(bodyParser.urlencoded({
+    extended: true
+}));
+
 app.use(morgan('common'));
 app.use(bodyParser.json());
+app.use(methodOverride());
 
 let myLogger = (req, res, next) => {
     console.log(req.url);
@@ -17,7 +22,7 @@ let myLogger = (req, res, next) => {
 
 app.use(myLogger);
 
-let topMovies = [
+let movies = [
     {
         title: 'The Sound of Music',
         year: '1965'
@@ -52,24 +57,84 @@ let topMovies = [
     }
 ];
 
-// get requests
+// Shows default message
 app.get('/', (req, res) => {
-    res.send('Welcome to myFlix!');
+    res.status(200).send('Welcome to myFlix!');
 });
 
+// Get a list of all movies
 app.get('/movies', (req, res) => {
-    res.json(topMovies);
+    res.json(movies);
 });
 
 app.use(express.static('public'));
 
+// Get data about a single movie by title
+app.get('/movies/:title', (req, res) => {
+    res.json(movies.find((movie) =>
+    { return movie.title === req.params.title }));
+});
 
+// Get description about a genre by category
+app.get('/genres/:category', (req, res) => {
+    res.json(genres.find((genre) =>
+    { return genre.category === req.params.category}));
+});
+
+// Get data about a director by name
+app.get('/directors/:name', (req, res) => {
+    res.json(directors.find((director) =>
+    { return director.name === req.params.name}));
+});
+
+// Allow new users to register
+app.post('/users', (req, res) => {
+    let newUser = req.body;
+
+    if (!newUser.username) {
+        const message = 'Must include email to register';
+        res.status(400).send(message);    
+    } else {
+        newUser.email = uuid.v4();
+        users.push(newUser);
+        res.status(201).send(newUser);
+    }
+});
+
+// Allow users to update their username by current username
+app.put('/users/:username', (req, res) => {
+    let user = users.find((user) => { return user.username === req.params.username });
+
+    if (user) {
+        user.usernames[req.params.username]
+        res.status(201).send('Username -- ' + req.params.username + ' -- has been successfully update.');
+    } else {
+        res.status(404).send('Username has not been updated.');
+    }
+});
+
+// Allow users to add a movie to their list of favorites by title
+app.put('/favorites/:title', (req, res) => {
+    res.status(201).send('Movie has been added to favorites');
+});
+
+// Allow users to remove a movie from their list of favorites by title
+app.delete('/favorites/:title', (req, res) => {
+    res.status(201).send('Movie has been removed from favorites');
+});
+
+// Allow existing users to deregister by username
+app.delete('/users/:username', (req, res) => {
+    res.status(201).send('Your account has been deleted successfully.')
+})
+
+// Error-handling middleware function
 app.use((err, req, res, next) => {
     console.error(err.stack);
     res.status(500).send('Something went wrong!');
 });
 
-// listen for requests
+// Listens for requests
 app.listen(8080, () => {
     console.log('Your app is listening on port 8080.');
 });
