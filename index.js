@@ -71,6 +71,13 @@ let directors = [
     }
 ];
 
+let users = [
+    {
+        username: 'Sam Skaufel',
+        email: 'samskaufel@gmail.com'
+    }
+];
+
 // Shows default message
 app.get('/', (req, res) => {
     res.status(200).send('Welcome to myFlix!');
