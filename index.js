@@ -73,8 +73,10 @@ let directors = [
 
 let users = [
     {
-        username: 'Sam Skaufel',
-        email: 'samskaufel@gmail.com'
+        username: 'samskaufel',
+        profile: {
+            email: 'samskaufel@gmail.com'
+        }
     }
 ];
 
@@ -119,17 +121,16 @@ app.post('/users', (req, res) => {
     }
 });
 
-// Allow users to update their username by current username
-app.put('/users/:username', (req, res) => {
-    res.status(201).send('Username has been updated');
-    // let user = users.find((user) => { return user.username === req.params.username });
-
-    // if (user) {
-    //     user.usernames[req.params.username]
-    //     res.status(201).send('Username -- ' + req.params.username + ' -- has been successfully update.');
-    // } else {
-    //     res.status(404).send('Username has not been updated.');
-    // }
+// Allow users to update their user info 
+app.put('/users/:username/:profile/:email', (req, res) => {
+    let user = users.find((user) => { return user.username === req.params.username });
+    
+    if (user) {
+        user.profiles[req.params.profile] = parseInt(req.params.email);
+        res.status(201).send(req.params.username + ' has successfully updated their email to ' + req.params.email);
+    } else {
+        res.status(404).send('Email has not been updated.');
+    }
 });
 
 // Allow users to add a movie to their list of favorites by title
