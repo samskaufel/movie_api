@@ -124,7 +124,7 @@ app.post('/users', (req, res) => {
 // Allow users to update their user info 
 app.put('/users/:username/:profile/:email', (req, res) => {
     let user = users.find((user) => { return user.username === req.params.username });
-    
+
     if (user) {
         user.profiles[req.params.profile] = parseInt(req.params.email);
         res.status(201).send(req.params.username + ' has successfully updated their email to ' + req.params.email);
