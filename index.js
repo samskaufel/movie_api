@@ -121,14 +121,15 @@ app.post('/users', (req, res) => {
 
 // Allow users to update their username by current username
 app.put('/users/:username', (req, res) => {
-    let user = users.find((user) => { return user.username === req.params.username });
+    res.status(201).send('Username has been updated');
+    // let user = users.find((user) => { return user.username === req.params.username });
 
-    if (user) {
-        user.usernames[req.params.username]
-        res.status(201).send('Username -- ' + req.params.username + ' -- has been successfully update.');
-    } else {
-        res.status(404).send('Username has not been updated.');
-    }
+    // if (user) {
+    //     user.usernames[req.params.username]
+    //     res.status(201).send('Username -- ' + req.params.username + ' -- has been successfully update.');
+    // } else {
+    //     res.status(404).send('Username has not been updated.');
+    // }
 });
 
 // Allow users to add a movie to their list of favorites by title
