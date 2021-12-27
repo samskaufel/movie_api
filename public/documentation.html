@@ -30,38 +30,85 @@
 
     <table>
         <tr>
-            <th>Business Logic</th>
+            <th>Request</th>
             <th>URL</th>
             <th>HTTP Method</th>
-            <th>Request body data format</th>
             <th>Response body data format</th>
         </tr>
         <tr>
             <td>Return a list of all movies to the user</td>
+            <td>/movies</td>
+            <td>GET</td>
+            <td>A JSON object holding data about all the movies</td>
         </tr>
         <tr>
             <td>Return data (description, genre, director, image, URL, whether it's featured or not) about a single movie by title to the user</td>
+            <td>/movies/:title</td>
+            <td>GET</td>
+            <td>A JSON object holding data about a single movie, containing a title, year, genre, description, director, and image URL. Example: <br>
+                { <br>
+                    title: "..." <br>
+                    year: "..." <br>
+                    genre: "..." <br>
+                    description: "..." <br>
+                    director: "..." <br>
+                    movie poster: [image URL] <br>
+                }
+            </td>
         </tr>
         <tr>
             <td>Return data about a genre (description) by name/title (e.g., "Thriller")</td>
+            <td>/movies/:title/:genre</td>
+            <td>GET</td>
+            <td>A JSON object holding data about a genre</td>
         </tr>
         <tr>
             <td>Return data about a director (bio, birth year, death year) by name</td>
+            <td>/movies/:director/:directorName</td>
+            <td>GET</td>
+            <td>A JSON object holding data about a director, containing name, birth year, death year, and a bio. Example: <br>
+                { <br>
+                    name: "..." <br>
+                    born: "..." <br>
+                    died: "..." <br>
+                    bio: "..." <br>
+                }
+            </td>
         </tr>
         <tr>
             <td>Allow new users to register</td>
+            <td>/users/:newUser</td>
+            <td>POST</td>
+            <td>A JSON object holding data about the user that was added, including username and email. Example: <br>
+                { <br>
+                    username: "..." <br>
+                    email: "..." <br>
+                }
+            </td>
         </tr>
         <tr>
             <td>Allows users to update their user info (username)</td>
+            <td>/users/:username</td>
+            <td>PUT</td>
+            <td>A text message indicating that the user's username has been successfully updated</td>
         </tr>
         <tr>
             <td>Allow users to add a movie to their list of favorites (showing only a text that a movie has been added)</td>
+            <td>/favorites/:title</td>
+            <td>PUT</td>
+            <td>A text message indicating that a movie has sucessfully added to their favorites list</td>
         </tr>
         <tr>
             <td>Allow users to remove a movie from their list of favorites (showing only a text that a movie has been removed)</td>
+            <td>/favorites/:title</td>
+            <td>DELETE</td>
+            <td>A text message indicating that a movie has been successfully removed from their favorites list</td>
         </tr>
         <tr>
             <td>Allow existing users to deregister (showing only a text that a user email has been removed)</td>
+            <td>/users/:username</td>
+            <td>DELETE</td>
+            <td>A text message indicating that the user has been successfully deregistered</td>
         </tr>
     </table>
 </body>
