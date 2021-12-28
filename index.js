@@ -129,16 +129,36 @@ app.post('/users', (req, res) => {
     }
 });
 
-// Allow users to update their user info 
-app.put('/users/:username/:profile/:email', (req, res) => {
-    let user = users.find((user) => { return user.username === req.params.username });
-
-    if (user) {
-        user.profiles[req.params.profile] = parseInt(req.params.email);
-        res.status(201).send(req.params.username + ' has successfully updated their email to ' + req.params.email);
-    } else {
-        res.status(404).send('Email has not been updated.');
-    }
+// Allow users to update their user info, by username
+/* We’ll expect JSON in this format
+{
+  Username: String,
+  (required)
+  Password: String,
+  (required)
+  Email: String,
+  (required)
+  Birthday: Date
+}*/
+app.put('/users/:Username', (req, res) => {
+    Users.findOneAndUpdate({ Username: req.params.Username }, {
+        $set:
+        {
+            Username: req.body.Username,
+            Password: req.body.Password,
+            Email: req.body.Email,
+            Birthday: req.body.Birthday
+        }
+    },
+        { new: true }, // This line makes sure that the updated document is returned
+        (err, updatedUser) => {
+            if (err) {
+                console.error(err);
+                res.status(500).send('Error: ' + err);
+            } else {
+                res.json(updatedUser);
+            }
+        });
 });
 
 // Allow users to add a movie to their list of favorites by title
