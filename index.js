@@ -135,19 +135,31 @@ app.put('/users/:username', (req, res) => {
 
     if (!updatedUsername.username) {
         res.status(201).send('Username was successfully updated');
- } else {
-    res.status(404).send('Username has not been updated');
- }
+    } else {
+        res.status(404).send('Username has not been updated');
+    }
 });
 
 // Allow users to add a movie to their list of favorites by title
 app.put('/favorites/:title', (req, res) => {
-    res.status(201).send('Movie has been added to favorites');
+    let updatedFavorites = req.body;
+
+    if (!updatedFavorites.title) {
+        res.status(201).send('Movie has been added to favorites');
+    } else {
+        res.status(404).send('Movie has not been added');
+    }
 });
 
 // Allow users to remove a movie from their list of favorites by title
 app.delete('/favorites/:title', (req, res) => {
-    res.status(201).send('Movie has been removed from favorites');
+    let updatedFavorites = req.body;
+
+    if (!updatedFavorites.title) {
+        res.status(201).send('Movie has been removed from favorites');
+    } else {
+        res.status(404).send('Movie has not been removed');
+    }
 });
 
 // Allow existing users to deregister by username
