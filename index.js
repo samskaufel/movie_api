@@ -30,8 +30,8 @@ let movies = [
         year: '1971'
     },
     {
-        title: 'Forrest Gump',
-        year: '1994'
+        title: 'Chitty Chitty Bang Bang',
+        year: '1968'
     },
     {
         title: 'Back to the Future',
@@ -42,8 +42,8 @@ let movies = [
         year: '2001'
     },
     {
-        title: 'The Princess Bride',
-        year: '1987'
+        title: 'Forrest Gump',
+        year: '1994'
     },
     {
         title: 'She\'s the Man',
@@ -52,6 +52,14 @@ let movies = [
     {
         title: '10 Things I Hate About You',
         year: '1999'
+    },
+    {
+        title: 'Mean Girls',
+        year: '2004'
+    },
+    {
+        title: 'The Wizard of Oz',
+        year: '1939'
     }
 ];
 
