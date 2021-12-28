@@ -82,9 +82,9 @@ let directors = [
 let users = [
     {
         username: 'samskaufel',
-        profile: {
-            email: 'samskaufel@gmail.com'
-        }
+        password: 'passw0rd',
+        email: 'samskaufel@gmail.com',
+        birthday: '1997-10-22'
     }
 ];
 
@@ -129,36 +129,15 @@ app.post('/users', (req, res) => {
     }
 });
 
-// Allow users to update their user info, by username
-/* We’ll expect JSON in this format
-{
-  Username: String,
-  (required)
-  Password: String,
-  (required)
-  Email: String,
-  (required)
-  Birthday: Date
-}*/
-app.put('/users/:Username', (req, res) => {
-    Users.findOneAndUpdate({ Username: req.params.Username }, {
-        $set:
-        {
-            Username: req.body.Username,
-            Password: req.body.Password,
-            Email: req.body.Email,
-            Birthday: req.body.Birthday
-        }
-    },
-        { new: true }, // This line makes sure that the updated document is returned
-        (err, updatedUser) => {
-            if (err) {
-                console.error(err);
-                res.status(500).send('Error: ' + err);
-            } else {
-                res.json(updatedUser);
-            }
-        });
+// Allow users to update their user username
+app.put('/users/:username', (req, res) => {
+    let updatedUsername = req.body;
+
+    if (!updatedUsername.username) {
+        res.status(201).send('Username was successfully updated');
+ } else {
+    res.status(404).send('Username has not been updated');
+ }
 });
 
 // Allow users to add a movie to their list of favorites by title
