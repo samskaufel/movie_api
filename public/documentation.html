@@ -57,18 +57,18 @@
           Return data (description, genre, director, image, URL, whether it's
           featured or not) about a single movie by title to the user
         </td>
-        <td>/movies/:title</td>
+        <td>/movies/:Title</td>
         <td>GET</td>
         <td>
           A JSON object holding data about a single movie, containing a title,
           year, genre, description, director, and image URL. Example: <br />
           { <br />
-          title: "..." <br />
-          year: "..." <br />
-          genre: "..." <br />
-          description: "..." <br />
-          director: "..." <br />
-          movie poster: [image URL] <br />
+          Title: <br />
+          Description: <br />
+          Genre: name and description <br />
+          Director: name, bio, born, and died <br />
+          ImagePath: [image URL] <br />
+          Featured: <br>
           }
         </td>
       </tr>
@@ -76,7 +76,7 @@
         <td>
           Return data about a genre (description) by category (e.g., "Thriller")
         </td>
-        <td>/genres/:category</td>
+        <td>/genres/:Name</td>
         <td>GET</td>
         <td>A JSON object holding data about a genre</td>
       </tr>
@@ -84,16 +84,16 @@
         <td>
           Return data about a director (bio, birth year, death year) by name
         </td>
-        <td>/director/:name</td>
+        <td>/directors/:Name</td>
         <td>GET</td>
         <td>
           A JSON object holding data about a director, containing name, birth
           year, death year, and a bio. Example: <br />
           { <br />
-          name: "..." <br />
-          born: "..." <br />
-          died: "..." <br />
-          bio: "..." <br />
+          Name: <br />
+          Bio: <br />
+          Born: <br />
+          Died: <br />
           }
         </td>
       </tr>
@@ -105,54 +105,50 @@
           A JSON object holding data about the user that was added, including
           username and email. Example: <br />
           { <br />
-          username: "..." <br />
-          email: "..." <br />
+          Username: <br />
+          Password: <br>
+          Email: <br />
+          Birthday: <br>
+          FavoriteMovies: <br>
           }
         </td>
       </tr>
       <tr>
         <td>Allows users to update their user info</td>
-        <td>/users/:username/:profile/:email</td>
+        <td>/users/:Username</td>
         <td>PUT</td>
         <td>
-          A text message indicating that the user's username has been
-          successfully updated
+          Updated document is returned to user upon successful update
         </td>
       </tr>
       <tr>
         <td>
-          Allow users to add a movie to their list of favorites (showing only a
-          text that a movie has been added)
+          Allow users to add a movie to their list of favorites
         </td>
-        <td>/favorites/:title</td>
-        <td>PUT</td>
+        <td>/users/:Username/movies/:MovieID</td>
+        <td>POST</td>
         <td>
-          A text message indicating that a movie has sucessfully added to their
-          favorites list
+          Updated document is returned to user upon successful update
         </td>
       </tr>
       <tr>
         <td>
-          Allow users to remove a movie from their list of favorites (showing
-          only a text that a movie has been removed)
+          Allow users to remove a movie from their list of favorites
         </td>
-        <td>/favorites/:title</td>
+        <td>/users/:Username/movies/:MovieID</td>
         <td>DELETE</td>
         <td>
-          A text message indicating that a movie has been successfully removed
-          from their favorites list
+          Updated document is returned to user upon successful removal
         </td>
       </tr>
       <tr>
         <td>
-          Allow existing users to deregister (showing only a text that a user
-          email has been removed)
+          Allow existing users to deregister
         </td>
         <td>/users/:username</td>
         <td>DELETE</td>
         <td>
-          A text message indicating that the user has been successfully
-          deregistered
+          Updated document is returned to user upon successful deletion
         </td>
       </tr>
     </table>
