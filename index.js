@@ -1,22 +1,36 @@
 // Requires:
 const express = require('express'),
-    morgan = require('morgan'),
     bodyParser = require('body-parser'),
-    mongoose = require('mongoose'),
-    Models = require('./models.js'),
-    app = express(),
-    Movies = Models.Movie,
-    Users = Models.User;
+    uuid = require('uuid');
 
-mongoose.connect('mongodb://localhost:27017//myFlixDB', { useNewUrlParser: true, useUnifiedTopology: true });
+const morgan = require('morgan');
+const app = express();
+const mongoose = require('mongoose');
+const Models = require('./models.js');
+    
+const Movies = Models.Movie;
+const Users = Models.User;
+
+mongoose.connect('mongodb://localhost:27017//myFlixDB', { 
+    useNewUrlParser: true, 
+    useUnifiedTopology: true, 
+});
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
     extended: true
 }));
 
+let auth = require('./auth')(app);
+
+const passport = require('passport');
+require('./passport');
+
 app.use(morgan('common'));
 
+app.get('/', (req, res) => {
+    res.send('Welcome to myFlix!');
+});
 
 let myLogger = (req, res, next) => {
     console.log(req.url);
