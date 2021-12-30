@@ -1,17 +1,22 @@
-// Requires express, morgan, body-parser, and uuid
+// Requires:
 const express = require('express'),
     morgan = require('morgan'),
     bodyParser = require('body-parser'),
-    uuid = require('uuid');
+    mongoose = require('mongoose'),
+    Models = require('./models.js'),
+    app = express(),
+    Movies = Models.Movie,
+    Users = Models.User;
 
-const app = express();
+mongoose.connect('mongodb://localhost:27017//myFlixDB', { useNewUrlParser: true, useUnifiedTopology: true });
 
+app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
     extended: true
 }));
 
 app.use(morgan('common'));
-app.use(bodyParser.json());
+
 
 let myLogger = (req, res, next) => {
     console.log(req.url);
@@ -20,152 +25,198 @@ let myLogger = (req, res, next) => {
 
 app.use(myLogger);
 
-let movies = [
-    {
-        title: 'The Sound of Music',
-        year: '1965'
-    },
-    {
-        title: 'Willy Wonka and the Chocolate Factory',
-        year: '1971'
-    },
-    {
-        title: 'Chitty Chitty Bang Bang',
-        year: '1968'
-    },
-    {
-        title: 'Back to the Future',
-        year: '1985'
-    },
-    {
-        title: 'Monsters, Inc.',
-        year: '2001'
-    },
-    {
-        title: 'Forrest Gump',
-        year: '1994'
-    },
-    {
-        title: 'She\'s the Man',
-        year: '2006'
-    },
-    {
-        title: '10 Things I Hate About You',
-        year: '1999'
-    },
-    {
-        title: 'Mean Girls',
-        year: '2004'
-    },
-    {
-        title: 'The Wizard of Oz',
-        year: '1939'
-    }
-];
-
-let genres = [
-    {
-        category: 'musical',
-        description: 'Musical film is a film genre in which songs by the characters are interwoven into the narrative, sometimes accompanied by singing and dancing. The songs usually advance the plot or develop the film\'s characters, but in some cases, they serve merely as breaks in the storyline, often as elaborate production numbers.'
-    }
-]
-
-let directors = [
-    {
-        name: 'Robert Wise',
-        born: '1914',
-        died: '2005',
-        bio: 'Robert Earl Wise was born on September 10, 1914 in Winchester, Indiana, the youngest of three sons of Olive R. (Longenecker) and Earl Waldo Wise, a meat packer. His parents were both of Pennsylvania Dutch (German) descent. At age nineteen, the avid moviegoer came into the film business through an odd job at RKO Radio Pictures. A head sound effects editor at the studio recognized Wise\'s talent, and made Wise his protégé. Around 1941, Orson Welles was in need of an editor for Citizen Kane (1941), and Wise did a splendid job. Welles really liked his work and ideas. Wise started as a director with some B-movies, and his career went on quickly, and he made many classic movies. His last theatrical film, Rooftops (1989), proved that he was a filmmaker still in full command of his craft in his 80s. The carefully composed images, tight editing, and unflagging pace make one wish that Wise had not stayed away from the camera for very long. Robert Wise died of heart failure on September, 14, 2005, just four days after his 91st birthday.'
-    }
-];
-
-let users = [
-    {
-        username: 'samskaufel',
-        password: 'passw0rd',
-        email: 'samskaufel@gmail.com',
-        birthday: '1997-10-22'
-    }
-];
-
-// Shows default message
-app.get('/', (req, res) => {
-    res.status(200).send('Welcome to myFlix!');
-});
-
-// Get a list of all movies
+// Get all movies
 app.get('/movies', (req, res) => {
-    res.json(movies);
+    Movies.find()
+        .then((movies) => {
+            res.status(201).json(movies);
+        })
+        .catch((err) => {
+            console.error(err);
+            res.status(500).send('Error: ' + err);
+        });
 });
 
 app.use(express.static('public'));
 
-// Get data about a single movie by title
-app.get('/movies/:title', (req, res) => {
-    res.json(movies.find((movie) => { return movie.title === req.params.title }));
+// Get a movie by title
+app.get('/movies/:Title', (req, res) => {
+    Movies.findOne({ Title: req.params.Title })
+        .then((movie) => {
+            res.json(movie);
+        })
+        .catch((err) => {
+            console.error(err);
+            res.status(500).send('Error: ' + err);
+        });
 });
 
-// Get description about a genre by category
-app.get('/genres/:category', (req, res) => {
-    res.json(genres.find((genre) => { return genre.category === req.params.category }));
+// Get a genre by name
+app.get('/genres/:Name', (req, res) => {
+    Movies.findOne({ Name: req.params.Name })
+        .then((genre) => {
+            res.json(genre);
+        })
+        .catch((err) => {
+            console.error(err);
+            res.status(500).send('Error: ' + err);
+        });
 });
 
-// Get data about a director by name
-app.get('/directors/:name', (req, res) => {
-    res.json(directors.find((director) => { return director.name === req.params.name }));
+// Get a director by name
+app.get('/directors/:Name', (req, res) => {
+    Movies.findOne({ Name: req.params.Name })
+        .then((genre) => {
+            res.json(genre);
+        })
+        .catch((err) => {
+            console.error(err);
+            res.status(500).send('Error: ' + err);
+        });
 });
 
-// Allow new users to register
+
+// Add a user 
+/* We'll expect JSON in this format 
+{ 
+    ID: Integer, 
+    Username: String, 
+    Password: String, 
+    Email: String, 
+    Birthday: Date
+} 
+ */
 app.post('/users', (req, res) => {
-    let newUser = req.body;
-
-    if (!newUser.username) {
-        const message = 'Must include email to register';
-        res.status(400).send(message);
-    } else {
-        newUser.email = uuid.v4();
-        users.push(newUser);
-        res.status(201).send(newUser);
-    }
+    Users.findOne({ Username: req.body.Username })
+        .then((user) => {
+            if (user) {
+                return res.status(400).send(req.body.Username + 'already exists');
+            } else {
+                Users
+                    .create({
+                        Username: req.body.Username,
+                        Password: req.body.Password,
+                        Email: req.body.Email,
+                        Birthday: req.body.Birthday
+                    })
+                    .then((user) => { res.status(201).json(user) })
+                    .catch((error) => {
+                        console.error(error);
+                        res.status(500).send('Error: ' + error);
+                    })
+            }
+        })
+        .catch((error) => {
+            console.error(error);
+            res.status(500).send('Error: ' + error);
+        });
 });
 
-// Allow users to update their user username
-app.put('/users/:username', (req, res) => {
-    let updatedUsername = req.body;
-
-    if (!updatedUsername.username) {
-        res.status(201).send('Username was successfully updated');
-    } else {
-        res.status(404).send('Username has not been updated');
-    }
+// Get all users
+app.get('/users', (req, res) => {
+    Users.find()
+        .then((users) => {
+            res.status(201).json(users);
+        })
+        .catch((error) => {
+            console.error(err);
+            res.status(500).send('Error: ' + err);
+        });
 });
 
-// Allow users to add a movie to their list of favorites by title
-app.put('/favorites/:title', (req, res) => {
-    let updatedFavorites = req.body;
-
-    if (!updatedFavorites.title) {
-        res.status(201).send('Movie has been added to favorites');
-    } else {
-        res.status(404).send('Movie has not been added');
-    }
+// Get a user by username
+app.get('/users/:Username', (req, res) => {
+    Users.findOne({ Username: req.params.Username })
+        .then((user) => {
+            res.json(user);
+        })
+        .catch((err) => {
+            console.error(err);
+            res.status(500).send('Error: ' + err);
+        });
 });
 
-// Allow users to remove a movie from their list of favorites by title
-app.delete('/favorites/:title', (req, res) => {
-    let updatedFavorites = req.body;
-
-    if (!updatedFavorites.title) {
-        res.status(201).send('Movie has been removed from favorites');
-    } else {
-        res.status(404).send('Movie has not been removed');
-    }
+// Update a user's info, by username
+/* We’ll expect JSON in this format
+{
+  Username: String,
+  (required)
+  Password: String,
+  (required)
+  Email: String,
+  (required)
+  Birthday: Date
+}
+*/
+app.put('/users/:Username', (req, res) => {
+    Users.findOneAndUpdate({ Username: req.params.Username },
+        {
+            $set:
+            {
+                Username: req.body.Username,
+                Password: req.body.Password,
+                Email: req.body.Email,
+                Birthday: req.body.Birthday
+            }
+        },
+        { new: true }, // This line makes sure that the updated document is returned
+        (err, updatedUser) => {
+            if (err) {
+                console.error(err);
+                res.status(500).send('Error: ' + err);
+            } else {
+                res.json(updatedUser);
+            }
+        });
 });
 
-// Allow existing users to deregister by username
-app.delete('/users/:username', (req, res) => {
-    res.status(201).send('Your account has been deleted successfully.')
-})
+// Add a movie to a user's list of favorites
+app.post('/users/:Username/movies/:MovieID', (req, res) => {
+    Users.findOneAndUpdate({ Username: req.params.Username }, {
+        $push: { FavoriteMovies: req.params.MovieID }
+    },
+        { new: true }, // This line makes sure that the updated document is returned
+        (err, updatedUser) => {
+            if (err) {
+                console.error(err);
+                res.status(500).send('Error: ' + err);
+            } else {
+                res.json(updatedUser);
+            }
+        });
+});
+
+// Delete a movie from a user's list of favorites
+app.delete('/users/:Username/movies/:MovieID', (req, res) => {
+    Users.findOneAndRemove({ Username: req.params.Username }, {
+        $push: { FavoriteMovies: req.params.MovieID }
+    },
+        { new: true }, // This line makes sure that the updated document is returned
+        (err, updatedUser) => {
+            if (err) {
+                console.error(err);
+                res.status(500).send('Error: ' + err);
+            } else {
+                res.json(updatedUser);
+            }
+        });
+});
+
+// Delete a user by username
+app.delete('/users/:Username', (req, res) => {
+    Users.findOneAndRemove({ Username: req.params.Username })
+        .then((user) => {
+            if (!user) {
+                res.status(400).send(req.params.Username + ' was not found');
+            } else {
+                res.status(200).send(req.params.Username + ' was deleted');
+            }
+        })
+        .catch((err) => {
+            console.error(err);
+            res.status(500).send('Error: ' + err);
+        });
+});
 
 // Error-handling middleware function
 app.use((err, req, res, next) => {
@@ -177,6 +228,3 @@ app.use((err, req, res, next) => {
 app.listen(8080, () => {
     console.log('Your app is listening on port 8080.');
 });
-
-
-
