@@ -24,6 +24,7 @@ let myLogger = (req, res, next) => {
 };
 
 app.use(myLogger);
+app.use(express.static('public'));
 
 // Get default message
 app.get('/', (req, res) => {
@@ -41,8 +42,6 @@ app.get('/movies', passport.authenticate('jwt', { session: false }), (req, res) 
             res.status(500).send('Error: ' + err);
         });
 });
-
-app.use(express.static('public'));
 
 // Get a movie by title
 app.get('/movies/:Title', passport.authenticate('jwt', { session: false }), (req, res) => {
