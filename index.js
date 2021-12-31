@@ -24,7 +24,7 @@ let myLogger = (req, res, next) => {
 };
 
 app.use(myLogger);
-app.use(express.static('public'));
+app.use(express.static('public')); 
 
 // Get default message
 app.get('/', (req, res) => {
