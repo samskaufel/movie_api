@@ -2,36 +2,43 @@
 const express = require('express');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
+const uuid = require('uuid');
 const app = express();
 const mongoose = require('mongoose');
 const Models = require('./models.js');
+
+const { check, validationResult } = require('express-validator');
 
 const Movies = Models.Movie;
 const Users = Models.User;
 
 // mongoose.connect('mongodb://localhost:27017/myFlixDB', { useNewUrlParser: true, useUnifiedTopology: true });
-mongoose.connect(process.env.CONNECTION_URI, { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect(process.env.CONNECTION_URI, { 
+    useNewUrlParser: true, 
+    useUnifiedTopology: true 
+});
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+app.use(express.json());
+app.use(express.urlencoded({extended: true}));
+
 const cors = require('cors');
 app.use(cors());
 
-let auth = require('./auth')(app);
+let auth = require('./auth.js')(app);
 const passport = require('passport');
-require('./passport');
+require('./passport.js');
 
-const { check, validationResult } = require('express-validator');
-
+app.use(morgan('common'));
 
 let myLogger = (req, res, next) => {
     console.log(req.url);
     next();
 };
-
 app.use(myLogger);
-app.use(express.static('public'));
+
 
 // Get default message
 app.get('/', (req, res) => {
@@ -245,6 +252,8 @@ app.delete('/users/:Username', passport.authenticate('jwt', { session: false }),
             res.status(500).send('Error: ' + err);
         });
 });
+
+app.use(express.static('public'));
 
 // Error-handling middleware function
 app.use((err, req, res, next) => {
