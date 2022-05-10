@@ -4,7 +4,7 @@
 The server-side component of the web application,  "myFlix". The web application will provide users with the access to information about different movies, directors, and genres. Users will be able to sign up, update their personal information, and create a list of their favorite movies.
 
 ## Objective
-The objective of this project was to gain experience creating my own REST API that interfaces with a database. 
+The objective of this project was to gain experience creating my own REST API that interfaces with a database. I got experience using the tech stack MERN, writing business logic using Mongoose, testing using Postman, using basic HTTP and JWT authentication, and hosting using Heroku.
 
 ## Features
 - New users will register
@@ -20,3 +20,5 @@ The objective of this project was to gain experience creating my own REST API th
 - Express
 - React
 - Node.js
+- Deployed to Heroku
+- Documentation generated with JSDoc
